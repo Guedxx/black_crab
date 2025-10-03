@@ -1,0 +1,7 @@
+[package]
+name = "black_crab"
+version = "0.0.1"
+edition = "2025"
+
+[dependencies]
+rand = "*"
