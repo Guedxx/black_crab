@@ -1,7 +1,8 @@
 [package]
 name = "black_crab"
 version = "0.0.1"
-edition = "2025"
+edition = "2024"
 
 [dependencies]
+clearscreen = "4.0.2"
 rand = "*"

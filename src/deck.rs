@@ -1,5 +1,5 @@
 use rand::seq::SliceRandom;
-use rand::thread_rng;
+use rand::rng;
 
 #[derive(Debug, Copy, Clone)]
 pub enum Suit {
@@ -46,7 +46,7 @@ impl Deck {
     }
     
     pub fn shuffle(&mut self) {
-       self.cards.shuffle(&mut thread_rng());
+       self.cards.shuffle(&mut rng());
     }
 
 }
