@@ -1,5 +1,6 @@
 use rand::seq::SliceRandom;
 use rand::rng;
+use std::fmt;
 
 #[derive(Debug, Copy, Clone)]
 pub enum Suit {
@@ -21,9 +22,43 @@ pub struct Card {
     pub suit: Suit,
 }
 
+
+impl fmt::Display for Rank {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let rank_str = match self {
+            Rank::Two => "2",
+            Rank::Three => "3",
+            Rank::Four => "4",
+            Rank::Five => "5",
+            Rank::Six => "6",
+            Rank::Seven => "7",
+            Rank::Eight => "8",
+            Rank::Nine => "9",
+            Rank::Ten => "10",
+            Rank::Jack => "J",
+            Rank::Queen => "Q",
+            Rank::King => "K",
+            Rank::Ace => "A",
+        };
+        write!(f, "{}", rank_str)
+    }
+}
+
+impl fmt::Display for Suit {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let suit_str = match self {
+            Suit::Hearts => "♥",
+            Suit::Diamonds => "♦",
+            Suit::Clubs => "♣",
+            Suit::Spades => "♠",
+        };
+        write!(f, "{}", suit_str)
+    }
+}
+
+
 pub struct Deck {
     cards: Vec<Card>,
-
 }
 
 impl Deck {
