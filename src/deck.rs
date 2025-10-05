@@ -84,4 +84,7 @@ impl Deck {
        self.cards.shuffle(&mut rng());
     }
 
+    pub fn deal(&mut self) -> Option<Card> {
+        self.cards.pop()
+    }
 }
