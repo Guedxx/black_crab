@@ -7,7 +7,6 @@ pub struct Player {
 
 impl Player {
     pub fn print_cards(&self) {
-        // Create 7 lines for each card (card height)
         let mut lines = vec![String::new(); 7];
         
         for card in &self.hand {
@@ -28,6 +27,29 @@ impl Player {
         for line in lines {
             println!("{}", line);
         }
+    }
+
+    pub fn sum_value_cards(&self) -> i32 {
+
+        let mut sum = 0;
+        let mut has_ace = false;
+
+        for card in &self.hand {
+            let value = card.rank.rank_int();
+            sum += value;
+            if value == 11 {
+                has_ace = true;
+            }
+        }
+
+        if sum > 21 && has_ace {
+            sum -= 9;
+        }
+        sum
+    }
+
+    pub fn bet(&mut self, num : i32){
+        self.money -= num;
     }
 } 
 
