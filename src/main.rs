@@ -6,7 +6,9 @@ use crate::player::Player;
 use std::io;
 
 fn main() {
-    
+    clearscreen::clear().expect("failed to clear screen");
+    println!("Let's play black_jack\n\n");
+
     let mut dealer = Player {
         hand: Vec::new(),
         money: 10000,
@@ -16,15 +18,14 @@ fn main() {
         money: 1000,
     };
 
-    clearscreen::clear().expect("failed to clear screen");
-    println!("Let's play black_jack\n\n");
-    
     let mut input = String::new();
-
     let mut playing = true;
-    while playing {
 
-        println!("How much do you wanna bet? You have {}U$ left", player.money);
+    while playing {
+        println!(
+            "How much do you wanna bet? You have {}U$ left",
+            player.money
+        );
 
         io::stdin()
             .read_line(&mut input)
@@ -39,14 +40,26 @@ fn main() {
         Deck::shuffle(&mut deck);
 
         let mut round = 1;
+
+        if let Some(card) = deck.deal() {
+            player.hand.push(card);
+        }
+
+        let mut player_action = String::new();
         while round > 0 {
             clearscreen::clear().expect("failed to clear screen");
 
-            if let Some(card) = deck.deal() {
-                dealer.hand.push(card);
+            if dealer.sum_value_cards() < 15 {
+                if let Some(card) = deck.deal() {
+                    dealer.hand.push(card);
+                }
             }
-            if let Some(card) = deck.deal() {
-                player.hand.push(card);
+
+            let mut player_input = player_action.trim();
+            if player_input == "h" {
+                if let Some(card) = deck.deal() {
+                    player.hand.push(card);
+                }
             }
 
             println!("Table's cards:");
@@ -54,20 +67,28 @@ fn main() {
             let dealer_sum = dealer.sum_value_cards();
             println!("Sums to {}", dealer_sum);
 
-
             player.print_cards();
-            println!("{}", player.sum_value_cards());
-            println!("You have {}U$", player.money);
             let hand_value = player.sum_value_cards();
+            println!("Sums to {}\n", hand_value);
+            println!("You have {}U$", player.money);
 
-            if round == 1 && hand_value == 21{
+            println!("Hit (h) or Stand (s)?:");
+            io::stdin()
+                .read_line(&mut player_action)
+                .expect("Failed to read line");
+
+            if round == 2 && hand_value == 21 {
                 round = 0;
             }
 
-            round = 0;
+            if player.sum_value_cards() > 21 {
+                println!("You loose!")
+            }
 
+            if player.sum_value_cards() == 21 {
+                println!("You win! いい！")
+            }
         }
-
 
         // Taking input and a end check
         io::stdin()
