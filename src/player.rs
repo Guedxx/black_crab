@@ -6,13 +6,25 @@ pub struct Player {
 }
 
 impl Player {
+    pub fn create(money: i32) -> Player {
+        let player = Player {
+            hand: Vec::new(),
+            money: money,
+        };
+        player
+    }
+
+    pub fn add_hand(&mut self, card: Card) {
+        self.hand.push(card);
+    }
+
     pub fn print_cards(&self) {
         let mut lines = vec![String::new(); 7];
-        
+
         for card in &self.hand {
             let rank = format!("{}", card.rank);
             let suit = format!("{}", card.suit);
-            
+
             // Build each line of the card
             lines[0].push_str("┌─────────┐ ");
             lines[1].push_str(&format!("│{:<2}       │ ", rank));
@@ -22,7 +34,7 @@ impl Player {
             lines[5].push_str(&format!("│       {:>2}│ ", rank));
             lines[6].push_str("└─────────┘ ");
         }
-        
+
         // Print all lines
         for line in lines {
             println!("{}", line);
@@ -30,7 +42,6 @@ impl Player {
     }
 
     pub fn sum_value_cards(&self) -> i32 {
-
         let mut sum = 0;
         let mut has_ace = false;
 
@@ -48,8 +59,7 @@ impl Player {
         sum
     }
 
-    pub fn bet(&mut self, num : i32){
+    pub fn bet(&mut self, num: i32) {
         self.money -= num;
     }
-} 
-
+}

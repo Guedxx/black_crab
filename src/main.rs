@@ -7,98 +7,63 @@ use std::io;
 
 fn main() {
     clearscreen::clear().expect("failed to clear screen");
-    println!("Let's play black_jack\n\n");
-
-    let mut dealer = Player {
-        hand: Vec::new(),
-        money: 10000,
-    };
-    let mut player = Player {
-        hand: Vec::new(),
-        money: 1000,
-    };
-
     let mut input = String::new();
-    let mut playing = true;
 
-    while playing {
-        println!(
-            "How much do you wanna bet? You have {}U$ left",
-            player.money
-        );
+    let mut player = Player::create(1000);
+    let mut dealer = Player::create(0);
 
-        io::stdin()
-            .read_line(&mut input)
-            .expect("Failed to read line");
+    println!("Let's play black_jack\n\n");
+    println!(
+        "How much do you wanna bet? You have {}U$ left",
+        player.money
+    );
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read line");
 
-        let num: i32 = input.trim().parse().expect("Please enter a valid number");
+    let num: i32 = input.trim().parse().expect("Please enter a valid number");
+    player.bet(num);
 
-        player.bet(num);
-        println!("Você apostou {}U$", num);
+    //round start
+    let mut deck = Deck::new();
+    Deck::shuffle(&mut deck);
 
-        let mut deck = Deck::new();
-        Deck::shuffle(&mut deck);
+    player.add_hand(deck.deal().unwrap());
+    player.add_hand(deck.deal().unwrap());
+    dealer.add_hand(deck.deal().unwrap());
 
-        let mut round = 1;
-
-        if let Some(card) = deck.deal() {
-            player.hand.push(card);
-        }
-
-        let mut player_action = String::new();
-        while round > 0 {
-            clearscreen::clear().expect("failed to clear screen");
-
-            if dealer.sum_value_cards() < 15 {
-                if let Some(card) = deck.deal() {
-                    dealer.hand.push(card);
-                }
-            }
-
-            let mut player_input = player_action.trim();
-            if player_input == "h" {
-                if let Some(card) = deck.deal() {
-                    player.hand.push(card);
-                }
-            }
-
-            println!("Table's cards:");
-            dealer.print_cards();
-            let dealer_sum = dealer.sum_value_cards();
-            println!("Sums to {}", dealer_sum);
-
-            player.print_cards();
-            let hand_value = player.sum_value_cards();
-            println!("Sums to {}\n", hand_value);
-            println!("You have {}U$", player.money);
-
-            println!("Hit (h) or Stand (s)?:");
-            io::stdin()
-                .read_line(&mut player_action)
-                .expect("Failed to read line");
-
-            if round == 2 && hand_value == 21 {
-                round = 0;
-            }
-
-            if player.sum_value_cards() > 21 {
-                println!("You loose!")
-            }
-
-            if player.sum_value_cards() == 21 {
-                println!("You win! いい！")
-            }
-        }
-
-        // Taking input and a end check
-        io::stdin()
-            .read_line(&mut input)
-            .expect("Failed to read line");
-        if input.trim_end() == "c" {
-            playing = false;
-        }
-
-        //clear for next round
+    // new buy loop
+    loop {
         clearscreen::clear().expect("failed to clear screen");
+
+        let dealer_sum = dealer.sum_value_cards();
+        let player_sum = player.sum_value_cards();
+
+        println!("Table's cards:");
+        println!("Sums to {}", dealer_sum);
+        dealer.print_cards();
+        player.print_cards();
+        println!("Sums to {}\n", player_sum);
+
+        println!("Hit (h) or Stand (s)?:");
+
+        let mut round_input = String::new();
+        io::stdin()
+            .read_line(&mut round_input)
+            .expect("Failed to read line");
+
+        let player_input = round_input.trim();
+
+        if player_input == "h" {
+            player.add_hand(deck.deal().unwrap());
+        }
+        if player_input == "s" {
+            break;
+        }
     }
+
+    while dealer.sum_value_cards() < 17 {}
+
+    //clear for next round
+    clearscreen::clear().expect("failed to clear screen");
 }
