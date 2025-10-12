@@ -41,6 +41,39 @@ impl Player {
         }
     }
 
+    pub fn print_dealer_cards(&self) {
+        let mut lines = vec![String::new(); 7];
+
+        for (i, card) in self.hand.iter().enumerate() {
+            if i == 0 {
+                lines[0].push_str("┌─────────┐ ");
+                lines[1].push_str("│░░░░░░░░░│ ");
+                lines[2].push_str("│░░░░░░░░░│ ");
+                lines[3].push_str("│░░░░░░░░░│ ");
+                lines[4].push_str("│░░░░░░░░░│ ");
+                lines[5].push_str("│░░░░░░░░░│ ");
+                lines[6].push_str("└─────────┘ ");
+            } else {
+                let rank = format!("{}", card.rank);
+                let suit = format!("{}", card.suit);
+
+                // Build each line of the card
+                lines[0].push_str("┌─────────┐ ");
+                lines[1].push_str(&format!("│{:<2}       │ ", rank));
+                lines[2].push_str("│         │ ");
+                lines[3].push_str(&format!("│    {}    │ ", suit));
+                lines[4].push_str("│         │ ");
+                lines[5].push_str(&format!("│       {:>2}│ ", rank));
+                lines[6].push_str("└─────────┘ ");
+            }
+        }
+
+        // Print all lines
+        for line in lines {
+            println!("{}", line);
+        }
+    }
+
     pub fn sum_value_cards(&self) -> i32 {
         let mut sum = 0;
         let mut has_ace = false;
