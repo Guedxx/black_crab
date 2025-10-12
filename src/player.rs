@@ -62,4 +62,8 @@ impl Player {
     pub fn bet(&mut self, num: i32) {
         self.money -= num;
     }
+
+    pub fn empty_hand(&mut self) {
+        self.hand = Vec::new();
+    }
 }
