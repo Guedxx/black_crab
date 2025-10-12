@@ -2,6 +2,9 @@
 
 A simple Blackjack game written in Rust.
 
+ <img width="355" height="445" alt="Image" src="https://github.com/user-attachments/assets/8f34e00d-144e-4db1-ae84-60c8724183af" /> <img width="472" height="445" alt="image" src="https://github.com/user-attachments/assets/c4b2bcf6-1c28-41c9-b265-dbf41cfea764" />
+
+
 ## How to play
 
 1.  Run the game with `cargo run`.
